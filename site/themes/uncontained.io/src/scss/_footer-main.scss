@@ -1,0 +1,9 @@
+.footer-main {
+  background-color: theme-color("dark-blue");
+  color: white;
+  padding: 1em;
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+}

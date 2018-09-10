@@ -1,0 +1,72 @@
+= Uncontained.io Builder Image
+
+This container image is provided to help test and build this hugo site.
+
+== Building the Image
+
+The hugo image is built in several stages:
+
+1. Build the rubygem-compiler
+2. Use the rubygem-compiler image to build an asciidoctor binary
+3. Build the hugo image
+
+Build the rubygem-compiler image:
+
+[source,bash]
+----
+docker build -t redhatcop/rubygem-compiler ./container-images/rubygem-compiler
+----
+
+Compile asciidoctor.
+
+[source,bash]
+----
+docker run -it -v ${PWD}/container-images/hugo/root/usr/bin/:/tmp/output/ \
+  -e PACKER_OPTIONS="--gem=asciidoctor --gem-version=1.5.7.1" \
+  -e PACKER_ENTRANCE="asciidoctor" \
+  -e PACKER_OUTPUT_PATH=/tmp/output/asciidoctor \
+  redhatcop/rubygem-compiler
+----
+
+An `asciidoctor` binary will be compiled and generated at `container-images/hugo/root/usr/bin/asciidoctor`. This will be baked into our `hugo` image in the next step.
+
+Build the image.
+
+[source,bash]
+----
+docker build -t redhatcop/hugo -f container-images/hugo/Dockerfile .
+----
+
+== Running the Image
+
+The simplest run command for the image is the following:
+
+[source,bash]
+----
+docker run redhatcop/hugo
+----
+
+This isn't terribly useful, however, as it builds a copy of the site already baked into the image, not from your local copy. In order to make use of the image to test your local changes, you'll need to mount your local repo into the container and run it as yourself.
+
+[source,bash]
+----
+docker run -u `id -u` -v ${PWD}:/opt/hugo:z redhatcop/hugo
+----
+
+This will result in the site built and output to your `public/` directory.
+
+The image also supports passing arguments to the link:https://gohugo.io/commands/hugo/[hugo] command.
+
+For example, to run the Hugo server:
+
+[source,bash]
+----
+docker run -u `id -u` -v ${PWD}:/opt/hugo:z -p 1313:1313 redhatcop/hugo serve --bind 0.0.0.0
+----
+
+And to add rendering of _drafts_:
+
+[source,bash]
+----
+docker run -u `id -u` -v ${PWD}:/opt/hugo:z -p 1313:1313 redhatcop/hugo serve --bind 0.0.0.0 -D
+----

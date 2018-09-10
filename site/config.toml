@@ -1,0 +1,51 @@
+baseURL = "/"
+title = "uncontained.io"
+# for smart copyright line, leave this blank and check [params.copyright]
+copyright = ""
+
+theme = "uncontained.io"
+
+disqusShortname = ""
+googleAnalytics = ""
+
+Paginate = 10
+preserveTaxonomyNames = true
+
+enableRobotsTXT = true # generate robots.txt
+
+# Syntax Highlighting ( https://gohugo.io/content-management/syntax-highlighting/ )
+pygmentsCodefencesGuessSyntax = true
+pygmentsCodeFences = true
+pygmentsStyle = "friendly"
+
+# Missing translations will default to this content language
+defaultContentLanguage = "en"
+
+[params.error404]
+title = "Page not found"
+message = "The requested page couldn't be found."
+homeText = "Return to homepage"
+
+[taxonomies]
+author = "authors"
+category = "categories"
+tag = "tags"
+
+[permalinks]
+page = "/:slug/"
+
+[[menu.main]]
+name = "Repo"
+weight = -10
+identifier = "repository"
+url = "https://github.com/redhat-cop/uncontained.io"
+
+[blackfriday]
+hrefTargetBlank = true
+
+[languages]
+# edit this block for your own language
+[languages.en]
+lang = "en"
+languageName = "English"
+weight = 1
